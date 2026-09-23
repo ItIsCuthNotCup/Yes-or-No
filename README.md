@@ -7,16 +7,17 @@ Live: https://yesno.jakecuth.com
 
 ## Layout
 
-- `index.html` — the whole UI, no build step.
-- `functions/ask.js` — Cloudflare Pages Function for `POST /ask`; proxies to
-  `POST https://api.typesafe.ai/v1/systemone` so the API key stays server-side.
+- `public/index.html` — the whole UI, no build step.
+- `worker.js` + `ask.js` — Cloudflare Worker: `POST /ask` proxies to
+  `POST https://api.typesafe.ai/v1/systemone` (key stays server-side); everything
+  else is served from `public/` as static assets (`wrangler.jsonc`).
 - `server.py` — same thing for local dev, stdlib only.
 
-## Deploy (Cloudflare Pages)
+## Deploy (Cloudflare Workers)
 
-Connect this repo as a Pages project: no build command, output directory `/`.
-Set `TYPESAFE_API_KEY` as a Production (and Preview) environment variable, then add
-the custom domain `yesno.jakecuth.com`.
+Workers & Pages → Create → connect this repo. No build command; deploy command
+`npx wrangler deploy`. Add `TYPESAFE_API_KEY` as a secret in the Worker's settings.
+`wrangler.jsonc` binds the custom domain `yesno.jakecuth.com`.
 
 ## Local
 

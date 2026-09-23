@@ -1,4 +1,4 @@
-// POST /ask — Cloudflare Pages Function. Proxies one noul question to Jev.
+// POST /ask — proxies one noul question to Jev.
 // Never emits 5xx (Cloudflare replaces those with its own HTML page):
 // runtime errors return 200 { error }.
 
@@ -13,7 +13,7 @@ const json = (obj, status = 200) =>
     headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
   });
 
-export async function onRequestPost({ request, env }) {
+export async function ask(request, env) {
   let question = '';
   try {
     question = String((await request.json()).question || '').trim();

@@ -72,7 +72,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         if self.path in ("/", "/index.html"):
-            self._send(200, (HERE / "index.html").read_bytes(), "text/html; charset=utf-8")
+            self._send(200, (HERE / "public" / "index.html").read_bytes(), "text/html; charset=utf-8")
         else:
             self._json(404, {"error": "not found"})
 
