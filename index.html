@@ -3,105 +3,94 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Yes or No · ask Jev</title>
+<title>Yes or No</title>
 <style>
   :root {
-    --bg: #0e0f13; --card: #171921; --line: #262a36; --text: #e8eaf1; --muted: #8b90a3;
-    --yes: #38d39f; --no: #ff5d73; --accent: #7c8cff;
+    --bg: #f4f4f2; --panel: #ffffff; --line: #e6e6e3; --text: #1a1a1a; --muted: #8a8a86; --faint: #b5b5b1;
+    --yes: #2f9e6e; --no: #c94f5c;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; }
   body {
-    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-    background: radial-gradient(1200px 600px at 50% -10%, #1c2033 0%, var(--bg) 60%);
-    color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100%;
-    padding: 48px 20px 80px;
+    font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100%;
+    display: flex; flex-direction: column; align-items: center; padding: 22vh 20px 80px;
+    -webkit-font-smoothing: antialiased;
   }
-  header { text-align: center; margin-bottom: 36px; }
-  h1 { margin: 0; font-size: 40px; letter-spacing: -0.02em; font-weight: 700; }
-  h1 span { color: var(--accent); }
-  header p { margin: 8px 0 0; color: var(--muted); }
+  main { width: 100%; max-width: 380px; display: flex; flex-direction: column; align-items: center; }
+  h1 { margin: 0 0 18px; font-size: 18px; font-weight: 500; letter-spacing: -0.01em; }
+
   form {
-    width: 100%; max-width: 640px; display: flex; gap: 10px;
-    background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 10px;
-    box-shadow: 0 10px 40px rgba(0,0,0,.35);
+    width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 10px 8px; box-shadow: 0 1px 2px rgba(0,0,0,.03);
   }
   input {
-    flex: 1; background: transparent; border: 0; outline: 0; color: var(--text);
-    font-size: 18px; padding: 10px 12px;
+    width: 100%; background: transparent; border: 0; outline: 0; color: var(--text);
+    font: inherit; font-size: 13px; padding: 2px 4px 10px;
   }
   input::placeholder { color: var(--muted); }
+  .bar { display: flex; justify-content: space-between; align-items: center; }
+  .model { color: var(--muted); font-size: 11px; padding-left: 4px; }
+  .model b { font-weight: 500; color: var(--text); }
   button {
-    background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: 0 22px;
-    font-size: 16px; font-weight: 600; cursor: pointer; transition: transform .1s, opacity .2s;
+    width: 22px; height: 22px; border-radius: 50%; border: 0; background: var(--text); color: #fff;
+    cursor: pointer; display: grid; place-items: center; padding: 0; transition: opacity .2s;
   }
-  button:hover { transform: translateY(-1px); }
-  button:disabled { opacity: .5; cursor: progress; transform: none; }
+  button:disabled { opacity: .35; cursor: progress; }
+  button svg { width: 11px; height: 11px; }
 
-  #verdict {
-    width: 100%; max-width: 640px; margin-top: 28px; text-align: center; min-height: 190px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-  }
-  .big {
-    font-size: 96px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;
-    animation: pop .35s cubic-bezier(.2,1.4,.4,1);
-  }
-  .big.yes { color: var(--yes); text-shadow: 0 0 60px rgba(56,211,159,.35); }
-  .big.no  { color: var(--no);  text-shadow: 0 0 60px rgba(255,93,115,.35); }
-  .meter { width: 100%; height: 10px; border-radius: 999px; background: var(--line); overflow: hidden; position: relative; }
-  .meter > i { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, var(--no), var(--yes)); width: 0; transition: width .6s ease; }
-  .meter::after { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 2px; background: var(--muted); opacity: .6; }
-  .sub { color: var(--muted); font-size: 14px; }
-  .thinking { color: var(--muted); font-size: 18px; }
-  .thinking::after { content: "…"; animation: dots 1s steps(3, end) infinite; }
-  .err { color: var(--no); font-size: 14px; white-space: pre-wrap; }
-  @keyframes pop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  @keyframes dots { 0% { content: ""; } 33% { content: "."; } 66% { content: ".."; } 100% { content: "..."; } }
+  #verdict { width: 100%; margin-top: 26px; text-align: center; min-height: 64px; }
+  .big { font-size: 34px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; animation: fade .4s ease; }
+  .big.yes { color: var(--yes); } .big.no { color: var(--no); }
+  .sub { color: var(--muted); font-size: 11px; margin-top: 6px; }
+  .thinking { color: var(--muted); font-size: 13px; padding-top: 12px; }
+  .thinking::after { content: ""; animation: dots 1.2s steps(4, end) infinite; }
+  .err { color: var(--no); font-size: 12px; white-space: pre-wrap; }
+  @keyframes fade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+  @keyframes dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
 
-  #history { width: 100%; max-width: 640px; margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
+  #history { width: 100%; margin-top: 30px; display: flex; flex-direction: column; }
   .row {
-    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
-    background: var(--card); border: 1px solid var(--line); border-radius: 12px; font-size: 15px;
+    display: flex; align-items: baseline; gap: 12px; padding: 8px 4px; font-size: 12px;
+    border-top: 1px solid var(--line); animation: fade .3s ease;
   }
-  .row .q { flex: 1; }
-  .row .a { font-weight: 800; width: 44px; text-align: right; }
+  .row:last-child { border-bottom: 1px solid var(--line); }
+  .row .q { flex: 1; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row .p { color: var(--faint); font-variant-numeric: tabular-nums; font-size: 11px; }
+  .row .a { font-weight: 500; width: 26px; text-align: right; }
   .row .a.yes { color: var(--yes); } .row .a.no { color: var(--no); }
-  .row .p { color: var(--muted); font-variant-numeric: tabular-nums; width: 48px; text-align: right; }
-  .row .bar { width: 80px; height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
-  .row .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--no), var(--yes)); }
-  footer { margin-top: 40px; color: var(--muted); font-size: 13px; text-align: center; }
-  footer a { color: var(--accent); text-decoration: none; }
 </style>
 </head>
 <body>
-  <header>
-    <h1>Yes <span>or</span> No</h1>
-    <p>Ask Jev anything with a yes/no answer. Jev never explains — it just answers.</p>
-  </header>
+  <main>
+    <h1>Yes or No</h1>
 
-  <form id="f" autocomplete="off">
-    <input id="q" placeholder="Is a tomato a fruit?" maxlength="500" autofocus />
-    <button id="go" type="submit">Ask</button>
-  </form>
+    <form id="f" autocomplete="off">
+      <input id="q" placeholder="Ask a yes or no question" maxlength="500" autofocus />
+      <div class="bar">
+        <span class="model" id="model">Jev</span>
+        <button id="go" type="submit" aria-label="Ask">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10V2M2.5 5.5 6 2l3.5 3.5"/></svg>
+        </button>
+      </div>
+    </form>
 
-  <div id="verdict"><div class="sub">Press Enter to ask.</div></div>
-  <div id="history"></div>
-
-  <footer>Answers come from <a href="https://typesafe.ai" target="_blank" rel="noreferrer">Jev</a>'s
-    probability that the honest answer is “yes”. The tick marks 50%.</footer>
+    <div id="verdict"></div>
+    <div id="history"></div>
+  </main>
 
 <script>
 const f = document.getElementById('f'), q = document.getElementById('q'), go = document.getElementById('go');
-const verdict = document.getElementById('verdict'), history = document.getElementById('history');
+const verdict = document.getElementById('verdict'), history = document.getElementById('history'), modelEl = document.getElementById('model');
 const pct = p => Math.round(p * 100) + '%';
 const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 function confidenceWord(p) {
   const d = Math.abs(p - 0.5);
-  if (d > 0.4) return 'Very confident';
-  if (d > 0.25) return 'Fairly confident';
-  if (d > 0.1) return 'Leaning';
-  return 'Basically a coin flip';
+  if (d > 0.4) return 'very sure';
+  if (d > 0.25) return 'fairly sure';
+  if (d > 0.1) return 'leaning';
+  return 'unsure';
 }
 
 f.addEventListener('submit', async (e) => {
@@ -109,22 +98,19 @@ f.addEventListener('submit', async (e) => {
   const question = q.value.trim();
   if (!question) return;
   go.disabled = true; q.disabled = true;
-  verdict.innerHTML = '<div class="thinking">Jev is deciding</div>';
+  verdict.innerHTML = '<div class="thinking">Thinking</div>';
   try {
     const r = await fetch('/ask', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ question }) });
     const d = await r.json();
     if (!r.ok) throw new Error(d.error || ('HTTP ' + r.status));
-    const cls = d.answer;
-    verdict.innerHTML = `
-      <div class="big ${cls}">${cls.toUpperCase()}</div>
-      <div class="meter"><i></i></div>
-      <div class="sub">${confidenceWord(d.p_yes)} · P(yes) = ${pct(d.p_yes)} · ${esc(d.model)}</div>`;
-    requestAnimationFrame(() => verdict.querySelector('.meter i').style.width = pct(d.p_yes));
+    const cls = d.answer, word = cls === 'yes' ? 'Yes' : 'No';
+    verdict.innerHTML = `<div class="big ${cls}">${word}</div>
+      <div class="sub">${confidenceWord(d.p_yes)} · ${pct(d.p_yes)} yes</div>`;
+    modelEl.innerHTML = `<b>${esc(d.model)}</b>`;
     const row = document.createElement('div');
     row.className = 'row';
-    row.innerHTML = `<div class="q">${esc(question)}</div>
-      <div class="bar"><i style="width:${pct(d.p_yes)}"></i></div>
-      <div class="p">${pct(d.p_yes)}</div><div class="a ${cls}">${cls.toUpperCase()}</div>`;
+    row.innerHTML = `<div class="q" title="${esc(question)}">${esc(question)}</div>
+      <div class="p">${pct(d.p_yes)}</div><div class="a ${cls}">${word}</div>`;
     history.prepend(row);
     q.value = '';
   } catch (err) {
